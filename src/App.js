@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function App() {
   const questions = [
@@ -40,29 +40,49 @@ export default function App() {
     }
   ];
 
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const handleAnserButtonClick = (isCorrect) => {
+    if (isCorrect === true) {
+      setScore(score + 1);
+    }
+
+    const nextQuestion = currentQuestion + 1;
+    if (nextQuestion < questions.length) {
+      setCurrentQuestion(nextQuestion);
+    } else {
+      setShowScore(true);
+    }
+  };
+
   return (
     <div className="app">
       {/* HINT: replace "false" with logic to display the 
       score when the user has answered all the questions */}
-      {false ? (
+      {showScore ? (
         <div className="score-section">
-          You scored 1 out of {questions.length}
+          You scored {score} out of {questions.length}
         </div>
       ) : (
         <>
           <div className="question-section">
             <div className="question-count">
-              <span>Question 1</span>/{questions.length}
+              <span>Question {currentQuestion + 1} </span>/{questions.length}
             </div>
             <div className="question-text">
-              This is where the question text should go
+              {questions[currentQuestion].questionText}
             </div>
           </div>
           <div className="answer-section">
-            <button>Answer 1</button>
-            <button>Answer 2</button>
-            <button>Answer 3</button>
-            <button>Answer 4</button>
+            {questions[currentQuestion].answerOptions.map((answerOption) => (
+              <button
+                onClick={() => handleAnserButtonClick(answerOption.isCorrect)}
+              >
+                {answerOption.answerText}
+              </button>
+            ))}
           </div>
         </>
       )}
